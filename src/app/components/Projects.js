@@ -50,7 +50,6 @@ const projects = [
       "AI-powered SaaS that generates full Next.js apps, runs them in isolated cloud sandboxes, and provides live previews.",
       "Secure Docker / E2B sandboxes with an AI system prompt that constrains model behavior, enforces filesystem rules, and grants terminal-level capabilities safely.",
       "tRPC for end-to-end type-safe APIs. Inngest for async workflows. Prisma + Neon for persistence. OpenAI GPT-4.1 API integration.",
-      "Polished UI with Tailwind + shadcn/ui.",
     ],
     highlights: [
       "AI systems engineering",
