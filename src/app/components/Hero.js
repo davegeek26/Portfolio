@@ -9,6 +9,9 @@ const allSkills = [
   "Python",
   "C++",
   "SQL",
+  "LangChain",
+  "LLM Integration",
+  "RAG",
   "HTML/CSS",
   "Next.js",
   "Node.js",
@@ -16,11 +19,8 @@ const allSkills = [
   "Tailwind CSS",
   "Supabase (PostgreSQL)",
   "Stripe",
-  "Session-based authentication",
   "REST APIs",
-  "Server Actions (Next.js)",
-  "Docker",
-  "Git & GitHub workflows",
+  "Git",
 ];
 
 const ABOUT_TEXT =
@@ -77,7 +77,7 @@ export default function Hero() {
             </span>
           </h1>
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-500 mb-6">
-            Student Software Engineer
+            Software Engineering Student
           </p>
 
           <p className="text-base sm:text-lg text-zinc-700 dark:text-zinc-300 leading-relaxed mb-8 min-h-[4rem]">

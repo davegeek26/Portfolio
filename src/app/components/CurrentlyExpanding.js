@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const EXPANDING_TEXT = `I'm currently focused on growing as a software engineer by learning more about backend development, API design, and reliable database systems. I want to understand how to build secure and scalable services, while also improving my knowledge of cloud computing with AWS, including things like serverless functions, storage, routing, and deployment. I'm also really interested in bringing AI into full stack applications, using modern AI tools to create smarter features like personalization, automation, search, and analytics. Overall, my goal is to become a well-rounded engineer who can design, build, secure, and scale real-world systems from end to end.`;
+const EXPANDING_TEXT = `I’m currently focused on building more sophisticated AI-driven systems and understanding how they operate beyond simple prompts. I’m especially interested in retrieval-augmented generation, agentic workflows, and how large language models can reason over real data through tools, memory, and orchestration. There is so much potential in this area, and I'm excited to continue exploring and getting better at it day by day.`;
 
 function useTypewriter(text, speed = 25) {
   const [display, setDisplay] = useState("");

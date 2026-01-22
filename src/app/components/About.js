@@ -3,15 +3,16 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const ABOUT_TEXT = `I’m a Computer Science student at the University of Florida who 
-enjoys building end-to-end software products, from backend architecture and APIs to 
-clean, polished frontend experiences. A lot of my work focuses on full-stack applications 
-where I take ownership of the entire lifecycle. That includes designing systems, 
-validating data server-side, integrating payments, and building interfaces that feel 
-fast and intuitive. I’m especially interested in developing scalable, secure systems 
-while designing clean, aesthetic frontends that are engaging for users. 
-Outside of coding, I spend a lot of time at the gym, watching/playing soccer, and casually 
-day-dreaming about startup ideas. And yes, Barcelona is the best team in the world.`;
+const ABOUT_TEXT = `I’m a Computer Science student at the University of Florida 
+who enjoys building end-to-end software products and understanding how the pieces 
+fit together. I like working across the stack designing backend systems and APIs, 
+validating and storing data correctly, and building frontends that feel fast and intuitive to use.
+Recently, I’ve been especially interested in AI-powered applications, particularly 
+Retrieval-Augmented Generation (RAG) systems and how large language models can 
+reason over personalized data. I enjoy experimenting with how retrieval, prompting, and 
+orchestration come together to form advanced AI applications.
+Outside of coding, I spend a lot of time at the gym, watching and playing soccer, 
+and casually day-dreaming about startup ideas.`;
 
 function useTypewriter(text, speed = 25) {
   const [display, setDisplay] = useState("");

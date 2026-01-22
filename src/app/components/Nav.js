@@ -47,14 +47,6 @@ export default function Nav() {
             >
               Projects
             </button>
-            <a
-              href="/ResumeDavidZapata.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-            >
-              Resume
-            </a>
             <button
               onClick={() => scrollToSection("contact")}
               className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
