@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const EXPANDING_TEXT = `I’m currently focused on building more sophisticated AI-driven systems and understanding how they operate beyond simple prompts. I’m especially interested in retrieval-augmented generation, agentic workflows, and how large language models can reason over real data through tools, memory, and orchestration. There is so much potential in this area, and I'm excited to continue exploring and getting better at it day by day.`;
+const EXPANDING_TEXT = `I’m currently focused on building more sophisticated AI-driven systems and understanding how they operate beyond simple prompts. I’m especially interested in retrieval-augmented generation, agentic workflows, and how large language models can reason over real data through tools, memory, and orchestration. I'm also on track to complete the Microsoft Azure AI Engineer path certificate. There is so much potential in this area, and I'm excited to continue exploring and getting better at it day by day.`;
 
 function useTypewriter(text, speed = 25) {
   const [display, setDisplay] = useState("");
