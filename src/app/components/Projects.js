@@ -22,7 +22,7 @@ const projects = [
     ],
     tech: ["Python", "FastAPI", "RAG", "LangChain", "Vite"],
     liveUrl: "#",
-    codeUrl: "#",
+    codeUrl: "https://github.com/Esierra422/Notus",
   },
   {
     title: "AI Real Estate Personal Assistant",
@@ -42,7 +42,7 @@ const projects = [
     ],
     tech: ["Python", "FastAPI", "MCP", "Next.js", "SQLite"],
     liveUrl: "#",
-    codeUrl: "#",
+    codeUrl: "https://github.com/davegeek26/AI-RealEstate-System",
   },
   {
     title: "Document-Specific Query System",
