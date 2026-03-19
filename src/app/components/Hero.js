@@ -1,150 +1,288 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const allSkills = [
+  "Python",
   "JavaScript",
   "TypeScript",
-  "Python",
+  "Java",
   "C++",
   "SQL",
   "LangChain",
-  "LLM Integration",
+  "MCP",
   "RAG",
-  "HTML/CSS",
+  "Azure AI",
+  "FastAPI",
   "Next.js",
-  "Node.js",
   "React",
-  "Tailwind CSS",
-  "Supabase (PostgreSQL)",
-  "Stripe",
+  "Node.js",
+  "Express.js",
   "REST APIs",
+  "PostgreSQL",
+  "Supabase",
+  "ChromaDB",
+  "Docker",
+  "AWS",
+  "PyTorch",
+  "OpenAI",
+  "Stripe",
   "Git",
 ];
 
-const ABOUT_TEXT =
-  "Lifting weights, watching Barça, and thinking about the next product to build.";
+const firstName = "David".split("");
+const lastName = "Zapata".split("");
 
-function useTypewriter(text, speed = 5) {
-  const [display, setDisplay] = useState("");
+const orbs = [
+  { size: 350, x: "5%", y: "15%", color: "bg-cyan-500/10", delay: 0, duration: 20 },
+  { size: 250, x: "65%", y: "55%", color: "bg-purple-500/10", delay: 2, duration: 25 },
+  { size: 280, x: "75%", y: "10%", color: "bg-pink-500/8", delay: 4, duration: 22 },
+  { size: 180, x: "15%", y: "65%", color: "bg-indigo-500/10", delay: 1, duration: 18 },
+];
 
-  useEffect(() => {
-    let i = 0;
-    const id = setInterval(() => {
-      i += 1;
-      setDisplay(text.slice(0, i));
-      if (i >= text.length) clearInterval(id);
-    }, speed);
-    return () => clearInterval(id);
-  }, [text, speed]);
+// Orbs are hidden on small screens via CSS, rendered smaller on md
 
-  return display;
-}
+// Each character flips in from below with 3D rotation
+const charVariants = {
+  hidden: { opacity: 0, y: 50, rotateX: -90, scale: 0.5 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    scale: 1,
+    transition: {
+      delay: i * 0.05,
+      type: "spring",
+      stiffness: 120,
+      damping: 12,
+    },
+  }),
+};
+
+// Last name chars start after first name finishes
+const lastNameCharVariants = {
+  hidden: { opacity: 0, y: 50, rotateX: -90, scale: 0.5 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    scale: 1,
+    transition: {
+      delay: firstName.length * 0.05 + 0.08 + i * 0.05,
+      type: "spring",
+      stiffness: 120,
+      damping: 12,
+    },
+  }),
+};
 
 export default function Hero() {
-  const typedAbout = useTypewriter(ABOUT_TEXT, 20);
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Multi-layer parallax — each line at different speed
+  const nameY = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const subtitleY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const lineY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const marqueeY = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const gridY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const orbScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+
+  const totalCharDelay = (firstName.length + lastName.length) * 0.05 + 0.08;
 
   return (
     <section
+      ref={sectionRef}
       id="hero"
-      className="min-h-screen flex items-center justify-center px-6 sm:px-8 md:px-12 lg:px-16 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-12 lg:px-16 relative overflow-hidden"
     >
-      {/* Animated background gradient */}
+      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30 dark:from-blue-950/10 dark:via-purple-950/10 dark:to-pink-950/10 pointer-events-none" />
 
-      {/* Subtle grid pattern */}
-      <div
+      {/* Floating orbs — hidden on mobile to prevent overflow */}
+      {orbs.map((orb, i) => (
+        <motion.div
+          key={i}
+          className={`absolute rounded-full ${orb.color} blur-3xl pointer-events-none hidden sm:block`}
+          style={{
+            width: orb.size,
+            height: orb.size,
+            left: orb.x,
+            top: orb.y,
+            scale: orbScale,
+          }}
+          animate={{
+            x: [0, 30, -20, 10, 0],
+            y: [0, -25, 15, -10, 0],
+          }}
+          transition={{
+            duration: orb.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: orb.delay,
+          }}
+        />
+      ))}
+
+      {/* Grid pattern */}
+      <motion.div
         className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
         style={{
           backgroundImage: `linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)`,
           backgroundSize: "50px 50px",
+          y: gridY,
         }}
       />
 
-      <div className="max-w-5xl w-full relative z-10">
-        {/* About card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="rounded-2xl bg-white/80 dark:bg-black/70 border border-zinc-200/70 dark:border-zinc-800/70 shadow-xl backdrop-blur-md p-6 sm:p-8 md:p-10"
-        >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight mb-4">
-            <span className="text-cyan-600 dark:text-cyan-400">
-              David Zapata
-            </span>
+      <div className="max-w-6xl w-full relative z-10">
+        {/* Line 1: First name — massive, each char independently animated */}
+        <motion.div style={{ y: nameY, perspective: 600 }} className="overflow-visible">
+          <h1 className="flex flex-wrap" style={{ perspective: 600 }}>
+            {firstName.map((char, i) => (
+              <motion.span
+                key={`f-${i}`}
+                custom={i}
+                variants={charVariants}
+                initial="hidden"
+                animate="visible"
+                className="inline-block text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight text-zinc-900 dark:text-white"
+                style={{ transformOrigin: "bottom center" }}
+              >
+                {char}
+              </motion.span>
+            ))}
           </h1>
-          <p className="text-sm uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-500 mb-6">
-            Software Engineering Student
-          </p>
+        </motion.div>
 
-          <p className="text-base sm:text-lg text-zinc-700 dark:text-zinc-300 leading-relaxed mb-8 min-h-[4rem]">
-            {typedAbout}
-            <span className="inline-block w-3 h-5 align-middle bg-zinc-400/80 dark:bg-zinc-200/80 animate-pulse ml-1" />
-          </p>
+        {/* Line 2: Last name — same size, staggered after first name */}
+        <motion.div style={{ y: nameY, perspective: 600 }} className="-mt-2 sm:-mt-4 overflow-visible">
+          <h1 className="flex flex-wrap" style={{ perspective: 600 }}>
+            {lastName.map((char, i) => (
+              <motion.span
+                key={`l-${i}`}
+                custom={i}
+                variants={lastNameCharVariants}
+                initial="hidden"
+                animate="visible"
+                className="inline-block text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight text-cyan-600 dark:text-cyan-400"
+                style={{ transformOrigin: "bottom center" }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </h1>
+        </motion.div>
 
-          {/* Horizontal Scrolling Skills Marquee inside card */}
+        {/* Animated divider line that draws itself */}
+        <motion.div style={{ y: lineY }} className="my-4 sm:my-6 md:my-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative mt-8"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{
+              delay: totalCharDelay + 0.2,
+              duration: 0.8,
+              ease: [0.25, 0.46, 0.45, 0.94],
+            }}
+            className="h-[2px] bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 origin-left max-w-md"
+          />
+        </motion.div>
+
+        {/* Line 3: Role + school */}
+        <motion.div style={{ y: subtitleY }}>
+          <motion.p
+            initial={{ opacity: 0, x: -40, filter: "blur(8px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{
+              delay: totalCharDelay + 0.5,
+              type: "spring",
+              stiffness: 100,
+              damping: 18,
+            }}
+            className="text-base sm:text-lg md:text-2xl font-medium text-zinc-600 dark:text-zinc-400 mb-1 sm:mb-2"
           >
-            {/* Fade overlays for smooth edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white via-white/60 to-transparent dark:from-black dark:via-black/60 z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/60 to-transparent dark:from-black dark:via-black/60 z-10 pointer-events-none" />
+            Software Engineer
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, x: -40, filter: "blur(8px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{
+              delay: totalCharDelay + 0.65,
+              type: "spring",
+              stiffness: 100,
+              damping: 18,
+            }}
+            className="text-sm sm:text-base md:text-lg text-zinc-500 dark:text-zinc-500"
+          >
+            University of Florida &middot; Computer Science
+          </motion.p>
+        </motion.div>
 
-            {/* First row - scrolling left */}
-            <div className="overflow-hidden mb-3">
-              <div className="flex animate-scroll">
-                {[...allSkills, ...allSkills].map((skill, index) => {
-                  const colors = [
-                    "from-cyan-600 to-sky-500",
-                    "from-zinc-800 to-zinc-600",
-                    "from-emerald-600 to-emerald-500",
-                    "from-indigo-600 to-indigo-500",
-                  ];
-                  const gradient = colors[index % colors.length];
-                  return (
-                    <div
-                      key={`${skill}-${index}`}
-                      className={`flex-shrink-0 mx-2 px-5 py-2 bg-gradient-to-r ${gradient} rounded-full text-white text-xs font-medium whitespace-nowrap shadow-md hover:scale-105 transition-transform cursor-default`}
-                    >
-                      {skill}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+        {/* Skills marquee — full width, no card */}
+        <motion.div
+          style={{ y: marqueeY }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: totalCharDelay + 0.9,
+            type: "spring",
+            stiffness: 80,
+            damping: 18,
+          }}
+          className="relative mt-8 sm:mt-12 md:mt-16"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-white via-white/60 to-transparent dark:from-black dark:via-black/60 z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-white via-white/60 to-transparent dark:from-black dark:via-black/60 z-10 pointer-events-none" />
 
-            {/* Second row - scrolling right (reverse) */}
-            <div className="overflow-hidden">
-              <div className="flex animate-scroll-reverse">
-                {[...allSkills, ...allSkills].map((skill, index) => {
-                  const colors = [
-                    "from-sky-500 to-cyan-600",
-                    "from-zinc-700 to-zinc-500",
-                    "from-emerald-500 to-emerald-600",
-                    "from-indigo-500 to-indigo-600",
-                  ];
-                  const gradient = colors[index % colors.length];
-                  return (
-                    <div
-                      key={`reverse-${skill}-${index}`}
-                      className={`flex-shrink-0 mx-2 px-5 py-2 bg-gradient-to-r ${gradient} rounded-full text-white text-xs font-medium whitespace-nowrap shadow-md hover:scale-105 transition-transform cursor-default`}
-                    >
-                      {skill}
-                    </div>
-                  );
-                })}
-              </div>
+          <div className="overflow-hidden mb-3">
+            <div className="flex animate-scroll">
+              {[...allSkills, ...allSkills].map((skill, index) => {
+                const colors = [
+                  "from-cyan-600 to-sky-500",
+                  "from-zinc-800 to-zinc-600",
+                  "from-emerald-600 to-emerald-500",
+                  "from-indigo-600 to-indigo-500",
+                ];
+                const gradient = colors[index % colors.length];
+                return (
+                  <div
+                    key={`${skill}-${index}`}
+                    className={`flex-shrink-0 mx-2 px-5 py-2 bg-gradient-to-r ${gradient} rounded-full text-white text-xs font-medium whitespace-nowrap shadow-md hover:scale-105 transition-transform cursor-default`}
+                  >
+                    {skill}
+                  </div>
+                );
+              })}
             </div>
-          </motion.div>
+          </div>
+
+          <div className="overflow-hidden">
+            <div className="flex animate-scroll-reverse">
+              {[...allSkills, ...allSkills].map((skill, index) => {
+                const colors = [
+                  "from-sky-500 to-cyan-600",
+                  "from-zinc-700 to-zinc-500",
+                  "from-emerald-500 to-emerald-600",
+                  "from-indigo-500 to-indigo-600",
+                ];
+                const gradient = colors[index % colors.length];
+                return (
+                  <div
+                    key={`reverse-${skill}-${index}`}
+                    className={`flex-shrink-0 mx-2 px-5 py-2 bg-gradient-to-r ${gradient} rounded-full text-white text-xs font-medium whitespace-nowrap shadow-md hover:scale-105 transition-transform cursor-default`}
+                  >
+                    {skill}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
-

@@ -1,57 +1,93 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
-const EXPANDING_TEXT = `I’m currently focused on building more sophisticated AI-driven systems and understanding how they operate beyond simple prompts. I’m especially interested in retrieval-augmented generation, agentic workflows, and how large language models can reason over real data through tools, memory, and orchestration. I'm also on track to complete the Microsoft Azure AI Engineer path certificate. There is so much potential in this area, and I'm excited to continue exploring and getting better at it day by day.`;
+const lines = [
+  "I'm currently focused on building more sophisticated AI-driven systems and understanding how they operate beyond simple prompts.",
+  "I'm especially interested in retrieval-augmented generation, agentic workflows, and how large language models can reason over real data through tools, memory, and orchestration.",
+  "I'm also on track to complete the Microsoft Azure AI Engineer path certificate.",
+  "There is so much potential in this area, and I'm excited to continue exploring and getting better at it day by day.",
+];
 
-function useTypewriter(text, speed = 25) {
-  const [display, setDisplay] = useState("");
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15 },
+  },
+};
 
-  useEffect(() => {
-    let i = 0;
-    const id = setInterval(() => {
-      i += 1;
-      setDisplay(text.slice(0, i));
-      if (i >= text.length) clearInterval(id);
-    }, speed);
-    return () => clearInterval(id);
-  }, [text, speed]);
+const headingVariants = {
+  hidden: { opacity: 0, y: 40, rotateX: -15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15,
+    },
+  },
+};
 
-  return display;
-}
+const lineVariants = {
+  hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 18,
+    },
+  },
+};
 
 export default function CurrentlyExpanding() {
-  const typedText = useTypewriter(EXPANDING_TEXT, 20);
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [4, 0, -4]);
 
   return (
     <section
+      ref={sectionRef}
       id="currently-expanding"
-      className="py-24 px-6 sm:px-8 md:px-12 lg:px-16 bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950 dark:to-black"
+      className="py-16 sm:py-24 px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950 dark:to-black"
     >
-      <div className="max-w-4xl mx-auto">
+      <motion.div
+        className="max-w-4xl mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+        style={{ perspective: 800 }}
+      >
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-3xl sm:text-4xl font-semibold mb-8 text-cyan-600 dark:text-cyan-400"
+          variants={headingVariants}
+          className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-6 sm:mb-8 text-cyan-600 dark:text-cyan-400"
         >
           Currently Expanding
         </motion.h2>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <p className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 leading-relaxed min-h-[12rem]">
-            {typedText}
-            <span className="inline-block w-3 h-5 align-middle bg-zinc-400/80 dark:bg-zinc-200/80 animate-pulse ml-1" />
-          </p>
+        <motion.div style={{ rotateX }}>
+          <div className="space-y-3 sm:space-y-4">
+            {lines.map((line, i) => (
+              <motion.p
+                key={i}
+                variants={lineVariants}
+                className="text-base sm:text-lg md:text-xl text-zinc-700 dark:text-zinc-300 leading-relaxed"
+              >
+                {line}
+              </motion.p>
+            ))}
+          </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
-
