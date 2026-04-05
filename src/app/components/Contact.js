@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 const links = [
-  { label: "GitHub", href: "https://github.com/davegeek26" },
+  { label: "GitHub", href: "https://github.com/DavidZapata26" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/david-zapata-uf/" },
   { label: "Email", href: "mailto:davidzap26@gmail.com" },
 ];

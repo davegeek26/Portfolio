@@ -63,7 +63,7 @@ const projects = [
     ],
     tech: ["Python", "FastAPI", "MCP", "Next.js", "SQLite"],
     liveUrl: "#",
-    codeUrl: "https://github.com/davegeek26/AI-RealEstate-System",
+    codeUrl: "https://github.com/DavidZapata26/AI-RealEstate-System",
   },
   {
     title: "Document-Specific Query System",
@@ -83,7 +83,7 @@ const projects = [
     ],
     tech: ["Python", "LangChain", "FastAPI", "RAG", "OpenAI API"],
     liveUrl: "#",
-    codeUrl: "https://github.com/davegeek26/RAG-Backend",
+    codeUrl: "https://github.com/DavidZapata26/RAG-Backend",
   },
   {
     title: "ML Research — Trading Algorithm",
@@ -122,7 +122,7 @@ const projects = [
     ],
     tech: ["Next.js", "React", "Stripe", "Supabase", "Express.js"],
     liveUrl: "https://royalmafia.vercel.app/",
-    codeUrl: "https://github.com/davegeek26/royal-mafia-nextjs",
+    codeUrl: "https://github.com/DavidZapata26/royal-mafia-nextjs",
   },
   {
     title: "NEPSIS",
@@ -141,7 +141,7 @@ const projects = [
     ],
     tech: ["React", "TypeScript", "CSS Modules"],
     liveUrl: "https://nepsis-frontend-portfolio.vercel.app/",
-    codeUrl: "https://github.com/davegeek26/Nepsis-Frontend-Portfolio",
+    codeUrl: "https://github.com/DavidZapata26/Nepsis-Frontend-Portfolio",
   },
 ];
 
