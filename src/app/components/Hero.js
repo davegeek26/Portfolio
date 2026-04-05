@@ -220,6 +220,19 @@ export default function Hero() {
           >
             University of Florida &middot; Computer Science
           </motion.p>
+          <motion.p
+            initial={{ opacity: 0, x: -40, filter: "blur(8px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{
+              delay: totalCharDelay + 0.8,
+              type: "spring",
+              stiffness: 100,
+              damping: 18,
+            }}
+            className="text-sm sm:text-base md:text-lg text-amber-500 dark:text-amber-400 font-medium mt-1 sm:mt-2"
+          >
+            1x Hackathon Winner
+          </motion.p>
         </motion.div>
 
         {/* Skills marquee — full width, no card */}

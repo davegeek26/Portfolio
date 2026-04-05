@@ -1,9 +1,30 @@
 "use client";
 
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const projects = [
+  {
+    title: "AI Cognitive Load Reducer",
+    subtitle: "Microsoft Azure Innovation Challenge · March 2026",
+    status: "Complete",
+    category: "AI / ML",
+    winner: true,
+    description: [
+      "Pebble is named after a worry stone: something small and smooth you reach for when the world feels like too much. It's an AI cognitive support companion that turns overwhelming documents, tasks, and information into calm, structured clarity. Built for neurodivergent minds. Useful for everyone.",
+      "Built an end-to-end document processing pipeline using Azure AI Document Intelligence to extract text from multiple file types and generate priority-based highlights, simplified summaries, actionable task generation, and contextual Q&A.",
+      "Containerized the full-stack application using Docker and deployed to Azure Container Apps.",
+    ],
+    highlights: [
+      "Won the SHPE 2026 Microsoft Azure Innovation Challenge",
+      "Azure AI Document Intelligence pipeline",
+      "Priority highlights, summaries & task generation",
+      "Docker + Azure Container Apps deployment",
+    ],
+    tech: ["Python", "Azure AI", "Docker", "Azure Container Apps", "FastAPI"],
+    liveUrl: "https://pebble.redbay-c8c366b2.eastus.azurecontainerapps.io/",
+    codeUrl: "https://github.com/dfig777/Cognitive-Load---SHPE-2026-Hackathon",
+  },
   {
     title: "AI Microservice for Video App",
     subtitle: "University of Florida · Jan 2026 – Present",
@@ -132,19 +153,16 @@ const statusColors = {
   Complete: "bg-cyan-500",
 };
 
-// Alternating card entrance: even from left, odd from right
-const cardVariants = {
+const cardEntrance = {
   hidden: (i) => ({
     opacity: 0,
     x: i % 2 === 0 ? -60 : 60,
     y: 30,
-    rotateY: i % 2 === 0 ? 6 : -6,
   }),
   visible: (i) => ({
     opacity: 1,
     x: 0,
     y: 0,
-    rotateY: 0,
     transition: {
       type: "spring",
       stiffness: 80,
@@ -160,81 +178,65 @@ const cardVariants = {
   },
 };
 
-function TiltCard({ children, index }) {
-  const ref = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  // Spring-smoothed rotations so movement feels organic
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
-  const scale = useSpring(1, { stiffness: 300, damping: 25 });
-  const z = useSpring(0, { stiffness: 300, damping: 25 });
-
-  // Glow position follows the cursor
-  const glowX = useSpring(useTransform(x, [-0.5, 0.5], [0, 100]), { stiffness: 200, damping: 30 });
-  const glowY = useSpring(useTransform(y, [-0.5, 0.5], [0, 100]), { stiffness: 200, damping: 30 });
-
-  function handleMouseMove(e) {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    // Normalize to -0.5 ... 0.5
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  }
-
-  function handleMouseEnter() {
-    scale.set(1.03);
-    z.set(30);
-  }
-
-  function handleMouseLeave() {
-    x.set(0);
-    y.set(0);
-    scale.set(1);
-    z.set(0);
-  }
+function FloatCard({ children, index, hoveredIndex, onHover, onLeave }) {
+  const isHovered = hoveredIndex === index;
+  const isDimmed = hoveredIndex !== null && !isHovered;
 
   return (
     <motion.div
-      ref={ref}
       custom={index}
-      variants={cardVariants}
+      variants={cardEntrance}
       initial="hidden"
-      animate="visible"
+      whileInView="visible"
       exit="exit"
+      viewport={{ once: true }}
       layout
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX,
-        rotateY,
-        scale,
-        z,
-        transformStyle: "preserve-3d",
-      }}
-      className="group relative rounded-2xl will-change-transform"
+      onMouseEnter={() => onHover(index)}
+      onMouseLeave={onLeave}
+      style={{ position: "relative", zIndex: isHovered ? 10 : 0 }}
+      className="rounded-2xl will-change-transform"
     >
-      {/* Cursor-tracking glow */}
+      {/* Hover float + dim wrapper */}
       <motion.div
-        className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{
-          background: useTransform(
-            [glowX, glowY],
-            ([gx, gy]) =>
-              `radial-gradient(circle at ${gx}% ${gy}%, rgba(6,182,212,0.5), rgba(168,85,247,0.3) 40%, rgba(236,72,153,0.2) 70%, transparent 100%)`
-          ),
-          filter: "blur(3px)",
+        animate={{
+          scale: isHovered ? 1.06 : isDimmed ? 0.97 : 1,
+          y: isHovered ? -10 : 0,
+          opacity: isDimmed ? 0.45 : 1,
+          filter: isDimmed ? "blur(1px)" : "blur(0px)",
         }}
-      />
-      {children}
+        transition={{ type: "spring", stiffness: 260, damping: 22 }}
+        className="relative rounded-2xl"
+      >
+        {/* Glow ring */}
+        <motion.div
+          className="absolute -inset-[2px] rounded-2xl pointer-events-none"
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 0%, rgba(6,182,212,0.55) 0%, rgba(168,85,247,0.35) 50%, transparent 80%)",
+            filter: "blur(6px)",
+          }}
+        />
+        {/* Floating shadow */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl pointer-events-none"
+          animate={{
+            boxShadow: isHovered
+              ? "0 30px 80px -12px rgba(6,182,212,0.35), 0 20px 40px -8px rgba(0,0,0,0.5)"
+              : "0 0px 0px 0px transparent",
+          }}
+          transition={{ duration: 0.25 }}
+        />
+        {children}
+      </motion.div>
     </motion.div>
   );
 }
 
 export default function Projects() {
   const [active, setActive] = useState("All");
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const filtered =
     active === "All" ? projects : projects.filter((p) => p.category === active);
 
@@ -286,13 +288,24 @@ export default function Projects() {
           ))}
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start" style={{ perspective: 1200 }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start">
           <AnimatePresence mode="popLayout">
             {filtered.map((project, index) => (
-              <TiltCard key={project.title} index={index}>
+              <FloatCard
+                key={project.title}
+                index={index}
+                hoveredIndex={hoveredIndex}
+                onHover={setHoveredIndex}
+                onLeave={() => setHoveredIndex(null)}
+              >
 
-                <div className="relative bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 sm:p-6 group-hover:border-transparent group-hover:shadow-2xl group-hover:shadow-cyan-500/10 transition-all duration-300">
+                <div className="relative bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 sm:p-6">
                   <div className="flex flex-col gap-3 sm:gap-4">
+                    {project.winner && (
+                      <div className="inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-500/40">
+                        Hackathon Winner
+                      </div>
+                    )}
                     <div className="flex items-start justify-between gap-2 sm:gap-3">
                       <div className="min-w-0">
                         <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-1 text-cyan-700 dark:text-cyan-300">
@@ -348,7 +361,7 @@ export default function Projects() {
                       {project.tech.map((tech) => (
                         <span
                           key={tech}
-                          className="px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 group-hover:bg-cyan-50 dark:group-hover:bg-cyan-950/30 group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors duration-300"
+                          className="px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300"
                         >
                           {tech}
                         </span>
@@ -385,7 +398,7 @@ export default function Projects() {
                     )}
                   </div>
                 </div>
-              </TiltCard>
+              </FloatCard>
             ))}
           </AnimatePresence>
         </div>
